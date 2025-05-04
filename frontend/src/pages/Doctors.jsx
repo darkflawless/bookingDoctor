@@ -8,23 +8,33 @@ export const Doctors = () => {
   const { doctors } = useContext(AppContext)
   const navigate = useNavigate()
   const [filterDoc, setFilterDoc] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+
   const applyFilter = () => {
+    let filtered = doctors
     if (speciality) {
-      setFilterDoc(doctors.filter(doc => doc.speciality === speciality))
+      filtered = filtered.filter(doc => doc.speciality === speciality)
     }
-    else {
-      setFilterDoc(doctors)
+    if (searchTerm) {
+      filtered = filtered.filter(doc => doc.name.toLowerCase().includes(searchTerm.toLowerCase()))
     }
+    setFilterDoc(filtered)
   }
 
   useEffect(() => {
     applyFilter()
-
-  }, [doctors, speciality])
+  }, [doctors, speciality, searchTerm])
 
   return (
     <div>
       <p>Browse through the doctors specialist.</p>
+      <input
+        type="text"
+        placeholder="Search doctors by name"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="border border-gray-300 rounded px-3 py-2 mb-4 w-full max-w-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
       <div className="flex flex-col sm:flex-row items-start gap-5 mt-5">
         <div className="flex-col gap-4 text-sm text-gray-600">
           <p onClick={() => speciality === 'General physician' ? navigate('/doctors') : navigate('/doctors/General physician')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer ${speciality === "General physician" ? "bg-indigo-100 text-black" : ""}`}>General physician</p>

@@ -12,25 +12,24 @@ export const MyAppointment = () => {
   const [pageNum, setPageNum] = useState(1); 
   const [totalPages, setTotalPages] = useState(1); 
  
-  const getUserAppointment = async (page) => {
+  const getUserAppointment = async (pageNum) => {
     try {
-      const { data } = await axios.post(
-        `${backendURL}/api/user/appointments`,
-        { pageNum: pageNum }, // Replace 'YOUR_USER_ID' with actual userId (e.g., from auth context)
-        { headers: { token } }
-      );
-
+      const { data } = await axios.get(`${backendURL}/api/user/appointments`, {
+        params: { pageNum },
+        headers: { token },
+      });
+  
       if (data.success) {
         setAppointments(data.appointments);
-        setTotalPages(data.totalPages || 1); // Update total pages from backend response
+        setTotalPages(data.totalPages || 1);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
       toast.error(error.message);
     }
-  }
-
+  };
+  
   
   const cancelAppointment = async (appointmentId) => {
      

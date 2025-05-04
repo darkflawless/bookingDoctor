@@ -79,7 +79,7 @@ const getProfile = async (req, res) => {
 
     try {
 
-        const { userId } = req.body
+        const userId = req.userId
         const userData = await userModel.findById(userId).select('-password')
         res.json({ success: true, userData })
 
@@ -94,7 +94,7 @@ const getProfile = async (req, res) => {
 //api to update user profile 
 
 const updateProfile = async (req, res) => {
-    const { userId } = req.body; // Extract userId from the request body
+    const userId = req.userId
 
     try {
 
@@ -127,7 +127,8 @@ const updateProfile = async (req, res) => {
 //APi to book appointment 
 const bookAppointment = async (req, res) => {
     try {
-        const { userId, docId, slotDate, slotTime } = req.body;
+        const userId = req.userId
+        const { docId, slotDate, slotTime } = req.body;
 
         function formatToISO(dateStr, timeStr) {
             const [day, month, year] = dateStr.split("_");
@@ -193,12 +194,12 @@ const bookAppointment = async (req, res) => {
 
 const listAppointment = async (req, res) => {
     try {
-      const { pageNum } = req.body;
-      const userId = req.body.userId;
+      const pageNum = parseInt(req.query.pageNum) || 1; // lấy từ query
+      const userId = req.userId;
       const perPage = 5;
   
-      if (!userId || !pageNum || pageNum < 1) {
-        return res.json({ success: false, message: 'Invalid userId or pageNum' });
+      if (!userId || pageNum < 1) {
+        return res.status(400).json({ success: false, message: 'Invalid userId or pageNum' });
       }
   
       const skip = (pageNum - 1) * perPage;
@@ -217,10 +218,11 @@ const listAppointment = async (req, res) => {
         appointments,
         totalAppointments,
         totalPages: Math.ceil(totalAppointments / perPage),
+        currentPage: pageNum,
       });
     } catch (error) {
       console.error(error);
-      res.json({ success: false, message: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
   };
   
@@ -228,7 +230,8 @@ const listAppointment = async (req, res) => {
 //
 const cancelAppointment = async (req, res) =>{
     try {
-        const { appointmentId, userId } = req.body
+        const userId = req.userId
+        const { appointmentId } = req.body
         const appointmentData  = await appointmentModel.findById(appointmentId)
 
         // add verify appointment user
