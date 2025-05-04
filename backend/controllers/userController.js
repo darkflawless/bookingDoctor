@@ -128,6 +128,13 @@ const updateProfile = async (req, res) => {
 const bookAppointment = async (req, res) => {
     try {
         const { userId, docId, slotDate, slotTime } = req.body;
+
+        function formatToISO(dateStr, timeStr) {
+            const [day, month, year] = dateStr.split("_");
+            // Đảm bảo "AM/PM" được parse đúng bằng cách thêm vào Date string chuẩn
+            return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")} ${timeStr}`;
+        }
+
         const docData = await doctorModel.findById(docId).select('-password')
 
         if (!docData.available){
@@ -162,7 +169,8 @@ const bookAppointment = async (req, res) => {
             amount : docData.fees ,
             slotTime ,
             slotDate ,
-            date : Date.now()
+            date : Date.now() ,
+            dateBooked : formatToISO(slotDate, slotTime),
         }
 
         const newAppointment = new appointmentModel(appointmentData)
@@ -183,18 +191,41 @@ const bookAppointment = async (req, res) => {
 
 //api 
 
-const listAppointment = async (req, res) =>{
+const listAppointment = async (req, res) => {
     try {
-        const {userId} = req.body
-        const appointments = await appointmentModel.find({userId})
-
-        res.json({success: true, appointments} )
-
+      const { pageNum } = req.body;
+      const userId = req.body.userId;
+      const perPage = 5;
+  
+      if (!userId || !pageNum || pageNum < 1) {
+        return res.json({ success: false, message: 'Invalid userId or pageNum' });
+      }
+  
+      const skip = (pageNum - 1) * perPage;
+  
+      const appointments = await appointmentModel
+        .find({ userId })
+        .sort({ dateBooked: -1 })
+        .skip(skip)
+        .limit(perPage)
+        .lean();
+  
+      const totalAppointments = await appointmentModel.countDocuments({ userId });
+  
+      res.json({
+        success: true,
+        appointments,
+        totalAppointments,
+        totalPages: Math.ceil(totalAppointments / perPage),
+      });
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });  
+      console.error(error);
+      res.json({ success: false, message: error.message });
     }
-}
+  };
+  
+
+//
 const cancelAppointment = async (req, res) =>{
     try {
         const { appointmentId, userId } = req.body

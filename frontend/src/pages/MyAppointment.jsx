@@ -9,22 +9,28 @@ export const MyAppointment = () => {
   const { backendURL , token , getDoctorsData } = useContext(AppContext)
   const navigate = useNavigate()
   const [appointments , setAppointments ] = useState([])
+  const [pageNum, setPageNum] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1); 
  
-  const getUserAppointment = async () =>{
-
+  const getUserAppointment = async (page) => {
     try {
-      const {data} = await axios.get(backendURL + '/api/user/appointments', {headers : {token}})
-      if (data.success){
-        setAppointments(data.appointments.reverse())
-  
+      const { data } = await axios.post(
+        `${backendURL}/api/user/appointments`,
+        { pageNum: pageNum }, // Replace 'YOUR_USER_ID' with actual userId (e.g., from auth context)
+        { headers: { token } }
+      );
+
+      if (data.success) {
+        setAppointments(data.appointments);
+        setTotalPages(data.totalPages || 1); // Update total pages from backend response
       } else {
-        toast.error(data.message)
+        toast.error(data.message);
       }
-      
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
   }
+
   
   const cancelAppointment = async (appointmentId) => {
      
@@ -44,6 +50,9 @@ export const MyAppointment = () => {
 
   }
 
+  useEffect(() => {
+    getUserAppointment(pageNum);
+  }, [pageNum]);
 
   useEffect(()=>{
     if (token) {
@@ -78,8 +87,26 @@ export const MyAppointment = () => {
                   { item.cancelled && !item.isCompleted && <p className = 'text-sm text-red-400 text-center sm:min-w-48 py-2 border rounded  transition-all'>Appointment Cancelled</p>}
                 </div>
             </div>
-          ))}          
+          ))} 
+
       </div>
+          <div>
+            Page {pageNum} of {totalPages}
+            <div className="flex justify-center mt-4">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setPageNum(index + 1)}
+                  className={`px-3 py-1 mx-1 border rounded ${
+                    pageNum === index + 1 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+          </div>
+
     </div>
   )
 }
