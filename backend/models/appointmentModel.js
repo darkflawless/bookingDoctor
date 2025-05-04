@@ -18,6 +18,7 @@ const appointmentSchema = new mongoose.Schema({
     dateBooked: { type: Date, required: true },
 })
 
+appointmentSchema.index({ userId: 1, dateBooked: -1 });
 
 const appointmentModel = mongoose.models.appointment || mongoose.model('appointment', appointmentSchema)
 
