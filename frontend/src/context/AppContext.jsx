@@ -11,13 +11,16 @@ const AppContextProvider = (props) => {
     const backendURL = import.meta.env.VITE_BACKEND_URL
     const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : false)
     const [doctors, setDoctors] = useState([])
-    const [userData, setUserData] = useState({}) // Changed from false to an empty object
+    const [userData, setUserData ] = useState({}) // Changed from false to an empty object
+    const [pageNum, setPageNum] = useState(1)
+    const [totalPages , setTotalPages] = useState(0)
 
     const getDoctorsData = async () => {
         try {
-            const { data } = await axios.get(backendURL + '/api/doctor/list')
+            const { data } = await axios.get(backendURL + '/api/doctor/list' , {params: { pageNum , pageSize : 5 } })
             if (data.success === true) {
                 setDoctors(data.doctors)
+                setTotalPages(data.totalPages || 1)
             } else {
                 toast.error(data.message)
             }
@@ -29,7 +32,7 @@ const AppContextProvider = (props) => {
 
     useEffect(() => {
         getDoctorsData();
-    }, []);
+    }, [pageNum]);
 
     const loadUserProfileData = async () => {
         try {
@@ -52,7 +55,8 @@ const AppContextProvider = (props) => {
     const value = {
         doctors, getDoctorsData ,
         currencySymbol,
-        token, setToken, backendURL, loadUserProfileData, userData, setUserData // Added userData and setUserData to context
+        token, setToken, backendURL, loadUserProfileData, userData, setUserData ,// Added userData and setUserData to context
+        pageNum, setPageNum, totalPages, setTotalPages
     };
 
     return (

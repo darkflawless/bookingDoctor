@@ -95,7 +95,6 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
     const userId = req.userId
-
     try {
 
         const { name, phone, address , dob, gender } = req.body
@@ -196,7 +195,7 @@ const listAppointment = async (req, res) => {
     try {
       const pageNum = parseInt(req.query.pageNum) || 1; // lấy từ query
       const userId = req.userId;
-      const perPage = 5;
+      const perPage = req.query.pageSize || 5; // lấy từ query, mặc định là 5
   
       if (!userId || pageNum < 1) {
         return res.status(400).json({ success: false, message: 'Invalid userId or pageNum' });
@@ -228,7 +227,7 @@ const listAppointment = async (req, res) => {
   
 
 //
-const cancelAppointment = async (req, res) =>{
+const cancelAppointment = async (req, res) =>{ 
     try {
         const userId = req.userId
         const { appointmentId } = req.body

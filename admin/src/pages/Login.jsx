@@ -51,7 +51,7 @@ const Login = () => {
         <form onSubmit={onSubmitHandler} className='min-h-[80vh] flex items-center justify-center'>
             <div className='flex flex-col gap-4 m-auto items-center p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-[#5E5E5E] text-sm shadow-lg bg-white'>
                 <p className='text-2xl font-semibold text-center'>
-                    <span className='text-primary'>Admin Login</span>
+                    <span className='text-primary'>{state === 'Admin' ? 'Admin Login' : 'Doctor Login'}</span>
                 </p>
                 <div className='w-full'>
                     <p>Email</p>

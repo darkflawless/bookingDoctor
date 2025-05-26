@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState , useEffect } from 'react'
 import { assets } from '../assets/assets'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { AppContext } from '../context/AppContext';
@@ -8,19 +8,26 @@ import { AppContext } from '../context/AppContext';
 export const Navbar = () => {
 
     const navigate = useNavigate() ;
-    const {token , setToken , userData } = useContext(AppContext)
+    const {token , setToken , userData , setUserData , loadUserProfileData } = useContext(AppContext)
     const [ showMenu , setShowMenu ] = useState(true);
 
     const logout = () =>{
 
         setToken(false)
         localStorage.removeItem('token')
+        setUserData({})
         navigate('/')
 
     }
+    useEffect (() => {
+        if (token) {
+            loadUserProfileData()
+        }
+    }, [token])
 
 
-  return (
+
+    return (
     <div className="flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400">
 
         <img onClick={()=> {navigate('/')} } className='w-44 cursor-pointer' src = {assets.logo} alt = ""/>

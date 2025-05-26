@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 export const MyAppointment = () => {
 
-  const { backendURL , token , getDoctorsData } = useContext(AppContext)
+  const { backendURL , token , getDoctorsData  } = useContext(AppContext) 
   const navigate = useNavigate()
   const [appointments , setAppointments ] = useState([])
   const [pageNum, setPageNum] = useState(1); 
@@ -15,7 +15,7 @@ export const MyAppointment = () => {
   const getUserAppointment = async (pageNum) => {
     try {
       const { data } = await axios.get(`${backendURL}/api/user/appointments`, {
-        params: { pageNum },
+        params: { pageNum , pageSize: 5 },
         headers: { token },
       });
   

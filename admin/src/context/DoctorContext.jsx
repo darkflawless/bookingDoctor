@@ -11,12 +11,11 @@ const DoctorContextProvider = (props) =>{
     const backendURL = import.meta.env.VITE_BACKEND_URL
 
     const [dToken , setDToken] = useState(localStorage.getItem('dToken') ? localStorage.getItem('dToken') : '')
-
     const [appointments , setAppointments] = useState([])
-
     const [dashboardData , setDashboardData] = useState(false)
-
     const [doctorProfile , setDoctorProfile] = useState(false)
+    const [pageNum, setPageNum] = useState(1); 
+    const [totalPages, setTotalPages] = useState(1); 
 
 
     const getAppointments = async () => {
@@ -25,12 +24,15 @@ const DoctorContextProvider = (props) =>{
         try {
                 
             const response = await axios.get(backendURL + '/api/doctor/appointments', 
-            {headers : { dToken }} ) 
+            { params: { pageNum },
+            headers : { dToken }} ) 
             
             const data = response.data;
 
             if (data?.success){
                 setAppointments(data.appointments.reverse()) ;
+                setPageNum(data.currentPage)
+                setTotalPages(data.totalPages)
                 console.log(data.appointments)
             } else {
                 toast.error(data.message)
@@ -146,10 +148,10 @@ const DoctorContextProvider = (props) =>{
 
     const value = {
         dToken , setDToken , backendURL ,
-        appointments , setAppointments , getAppointments , 
-        completeAppointment , cancelAppointment , getDoctorDashboard , 
-        setDashboardData , dashboardData , getDoctorProfile , doctorProfile , 
-        setDoctorProfile , updateDoctorProfile , updateDoctorPassword
+        appointments , setAppointments , getAppointments , completeAppointment , cancelAppointment , 
+        getDoctorDashboard , setDashboardData , 
+        dashboardData , getDoctorProfile , doctorProfile , setDoctorProfile , updateDoctorProfile ,
+         updateDoctorPassword , pageNum , setPageNum , totalPages , setTotalPages
 
     }
 

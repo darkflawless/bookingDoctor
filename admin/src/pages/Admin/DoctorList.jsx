@@ -26,7 +26,7 @@ const DoctorList = () => {
                     <h2 className="text-xl font-semibold">{doctor.name}</h2>
                     <p className="text-gray-600">{doctor.speciality}</p>
           
-                    <div onClick ={(e) => changeAvailability(doctor._id)} className="mt-4">
+                    <div onClick ={(e) => changeAvailability(doctor._id)} className="mt-4 cursor-pointer">
                         {doctor.available ? (
                             <span className="bg-green-200 text-green-800 px-2 py-1 rounded">Available</span>
                         ) : (

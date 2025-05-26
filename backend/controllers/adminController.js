@@ -102,11 +102,33 @@ const allDoctors  = async (req, res)=>{
 const appointmentsAdmin = async (req, res) => {
 
     try {
-        const appointments = await appointmentModel.find({})
-        res.json ({success : true , appointments})
+        const pageNum = parseInt(req.query.pageNum) || 1; // lấy từ query;
+        const perPage = 8;
 
-        
-    } catch (error) {
+    
+        if ( pageNum < 1) {
+          return res.status(400).json({ success: false, message: 'Invalid userId or pageNum' });
+        }
+    
+        const skip = (pageNum - 1) * perPage;
+    
+        const appointments = await appointmentModel
+          .find({})
+          .sort({ dateBooked: -1 })
+          .skip(skip)
+          .limit(perPage)
+          .lean();
+    
+        const totalAppointments = await appointmentModel.countDocuments({});
+    
+        res.json({
+          success: true,
+          appointments,
+          totalAppointments,
+          totalPages: Math.ceil(totalAppointments / perPage),
+          currentPage: pageNum,
+        });
+      }  catch (error) {
         console.log(error);
         res.json({success: false, message: error.message });
     }

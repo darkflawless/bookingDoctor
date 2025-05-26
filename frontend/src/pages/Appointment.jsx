@@ -10,8 +10,7 @@ import axios from 'axios';
 export const Appointment = () => {
 
     const { docId } = useParams()
-    const { doctors , currencySymbol , getDoctorsData , backendURL , token  } = useContext(AppContext) 
-
+    const { doctors , currencySymbol, getDoctorsData , backendURL , token  } = useContext(AppContext) 
     const navigate = useNavigate()
     const [docInfo , setDocInfo] = useState(null)
     const [docSlots, setDocSlots] = useState ([])
@@ -99,7 +98,7 @@ export const Appointment = () => {
         
           if (data.success){
             toast.success('Appointment booked successfully')
-            getDoctorsData() 
+            getDoctorsData()
             navigate('/my-appointments')
 
           } else {

@@ -7,14 +7,16 @@ import { assets } from '../../assets/assets';
 
 const doctorAppointment = () => {
 
-  const { dToken, appointments, getAppointments, completeAppointment, cancelAppointment, getDoctorDashboard } = useContext(DoctorContext)
+  const { dToken, appointments, getAppointments, completeAppointment, cancelAppointment,
+    getDoctorDashboard, pageNum, setPageNum, totalPages, setTotalPages } = useContext(DoctorContext)
   const { calcAge, currency } = useContext(AppContext)
 
   useEffect(() => {
     if (dToken) {
       getAppointments();
     }
-  }, [dToken])
+  }, [dToken, pageNum])
+
 
 
 
@@ -68,6 +70,24 @@ const doctorAppointment = () => {
           </div>
         ))}
       </div>
+      
+      <div>
+        Page {pageNum} of {totalPages}
+        <div className="flex justify-center mt-4">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => setPageNum(index + 1)}
+              className={`px-3 py-1 mx-1 border rounded ${pageNum === index + 1 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'
+                }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+      </div>
+
+
     </div>
   )
 }

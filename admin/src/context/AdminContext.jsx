@@ -12,10 +12,12 @@ const AdminContextProvider = (props) => {
     const backendURL = import.meta.env.VITE_BACKEND_URL
     const [appointments, setAppointments] = useState([])
     const [dashData, setDashData] = useState(false)
+    const [pageNum, setPageNum] = useState(1); 
+    const [totalPages, setTotalPages] = useState(1); 
 
     const getAllDoctors = async () => {
         try {
-            const { data } = await axios.post(backendURL + '/api/admin/all-doctors', {}, { headers: { aToken } })
+            const { data } = await axios.post(backendURL + '/api/admin/all-doctors', {} , { headers: { aToken } })
             if (data.success) {
                 setDoctors(data.doctors)
                 console.log(data.doctors)
@@ -64,10 +66,14 @@ const AdminContextProvider = (props) => {
 
     const getAllAppointments = async () => {
         try {
-            const { data } = await axios.get(backendURL + '/api/admin/all-appointments', { headers: { aToken } })
+            const { data } = await axios.get(`${backendURL}/api/admin/all-appointments`, {
+                params: { pageNum },
+                headers: { aToken },
+              });
             if (data.success) {
-
+                console.log(data.totalAppointments)
                 setAppointments(data.appointments)
+                setTotalPages(data.totalPages || 1);
             } else {
                 toast.error(data.message)
             }
@@ -98,6 +104,7 @@ const AdminContextProvider = (props) => {
         aToken, setAToken, backendURL, doctors
         , getAllDoctors, changeAvailability, getAllAppointments,
         appointments, setAppointments, cancelAppointment , dashData , getDashData
+        , pageNum, setPageNum, totalPages, setTotalPages
     }
 
     return (

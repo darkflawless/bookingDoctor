@@ -5,7 +5,7 @@ import { AppContext } from '../context/AppContext'
 export const Doctors = () => {
 
   const { speciality } = useParams()
-  const { doctors } = useContext(AppContext)
+  const { doctors , pageNum , setPageNum , totalPages  } = useContext(AppContext)
   const navigate = useNavigate()
   const [filterDoc, setFilterDoc] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -27,14 +27,16 @@ export const Doctors = () => {
 
   return (
     <div>
-      <p>Browse through the doctors specialist.</p>
-      <input
-        type="text"
-        placeholder="Search doctors by name"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="border border-gray-300 rounded px-3 py-2 mb-4 w-full max-w-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      />
+      <p className ='flex justify-center' >Browse through the doctors specialist.</p>
+      <div className="flex justify-center">
+        <input
+          type="text"
+          placeholder="Search doctors by name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border border-gray-300 rounded px-3 py-2 mb-4 w-full max-w-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+      </div>
       <div className="flex flex-col sm:flex-row items-start gap-5 mt-5">
         <div className="flex-col gap-4 text-sm text-gray-600">
           <p onClick={() => speciality === 'General physician' ? navigate('/doctors') : navigate('/doctors/General physician')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer ${speciality === "General physician" ? "bg-indigo-100 text-black" : ""}`}>General physician</p>
@@ -63,6 +65,23 @@ export const Doctors = () => {
             ))}
         </div>
       </div>
+
+      <div>
+        Page {pageNum} of {totalPages}
+        <div className="flex justify-center mt-4">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => setPageNum(index + 1)}
+              className={`px-3 py-1 mx-1 border rounded ${pageNum === index + 1 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'
+                }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+      </div>
+
     </div>
   )
 }

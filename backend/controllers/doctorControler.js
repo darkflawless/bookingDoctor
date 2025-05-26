@@ -24,8 +24,29 @@ const changeAvailability = async (req, res) => {
 
 const doctorList = async (req, res) => {
     try {
-        const doctors = await doctorModel.find({}).select(['-password', '-email'])
-        res.json({ success: true, doctors })
+
+        const pageNum = parseInt(req.query.pageNum) || 1; // lấy từ query
+        const perPage = 5;
+
+        const skip = (pageNum - 1) * perPage;  
+              
+        const doctors = await doctorModel.find({})
+        .select(['-password', '-email'])
+        .skip(skip)
+        .limit(perPage)
+        .lean();
+
+        const totalDoctors = await doctorModel.countDocuments({})
+        const totalPages = Math.ceil(totalDoctors / perPage);
+
+        res.json({
+            success: true,
+            doctors,
+            totalDoctors,
+            totalPages,
+            currentPage: pageNum,
+        });
+
     } catch (error) {
         console.log(error)
         res.json({ success: false, message: error.message })
@@ -67,15 +88,36 @@ const loginDoctor = async (req, res) => {
 
 const appointmentDoctor = async (req, res) => {
     try {
-        const { docId } = req.body
-
-        const appointments = await appointmentModel.find({ docId })
-        res.json({ success: true, appointments })
-    } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
-    }
-
+        const pageNum = parseInt(req.query.pageNum) || 1; // lấy từ query
+        const docId = req.body.docId;
+        const perPage = 5;
+    
+        if (!docId || pageNum < 1) {
+          return res.status(400).json({ success: false, message: 'Invalid userId or pageNum' });
+        }
+    
+        const skip = (pageNum - 1) * perPage;
+    
+        const appointments = await appointmentModel
+          .find({ docId })
+          .sort({ dateBooked: -1 })
+          .skip(skip)
+          .limit(perPage)
+          .lean();
+    
+        const totalAppointments = await appointmentModel.countDocuments({ docId });
+    
+        res.json({
+          success: true,
+          appointments,
+          totalAppointments,
+          totalPages: Math.ceil(totalAppointments / perPage),
+          currentPage: pageNum ,
+        }); 
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: error.message });
+      }
 }
 
 // api to mark appointment completed 
