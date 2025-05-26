@@ -56,6 +56,13 @@ export const Navbar = () => {
                 </li>
                 <hr className = 'border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
             </NavLink>
+            <NavLink to = '/manage-medicine'>
+                <li className ='py-1'>
+                    MEDICINE
+                </li>
+                <hr className = 'border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
+            </NavLink>
+
 
         </ul>
         <div className = 'flex items-center gap-4'>

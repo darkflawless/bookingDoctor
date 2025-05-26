@@ -11,13 +11,14 @@ const AppContextProvider = (props) => {
     const backendURL = import.meta.env.VITE_BACKEND_URL
     const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : false)
     const [doctors, setDoctors] = useState([])
-    const [userData, setUserData ] = useState({}) // Changed from false to an empty object
+    const [userData, setUserData] = useState({}) // Changed from false to an empty object
     const [pageNum, setPageNum] = useState(1)
-    const [totalPages , setTotalPages] = useState(0)
+    const [totalPages, setTotalPages] = useState(0)
+    const [medicines, setMedicines] = useState([])
 
     const getDoctorsData = async () => {
         try {
-            const { data } = await axios.get(backendURL + '/api/doctor/list' , {params: { pageNum , pageSize : 5 } })
+            const { data } = await axios.get(backendURL + '/api/doctor/list', { params: { pageNum, pageSize: 5 } })
             if (data.success === true) {
                 setDoctors(data.doctors)
                 setTotalPages(data.totalPages || 1)
@@ -48,15 +49,29 @@ const AppContextProvider = (props) => {
         }
     }
 
+    const getMedicines = async () => {
+        try {
+            const { data } = await axios.get(backendURL + '/api/user/get-medicines', { headers: { token } })
+            if (data.success) {
+                setMedicines(data.medicines)
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
+
     useEffect(() => {
         loadUserProfileData(); // Call to load user data
     }, []);
 
     const value = {
-        doctors, getDoctorsData ,
+        doctors, getDoctorsData,
         currencySymbol,
-        token, setToken, backendURL, loadUserProfileData, userData, setUserData ,// Added userData and setUserData to context
-        pageNum, setPageNum, totalPages, setTotalPages
+        token, setToken, backendURL, loadUserProfileData, userData, setUserData,// Added userData and setUserData to context
+        pageNum, setPageNum, totalPages, setTotalPages , getMedicines , setMedicines, medicines
     };
 
     return (

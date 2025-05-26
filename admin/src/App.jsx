@@ -17,8 +17,12 @@ import { DoctorContext } from './context/DoctorContext';
 import DoctorDashboard from './pages/Doctor/DoctorDashboard';
 import DoctorAppointment from './pages/Doctor/DoctorAppointment';
 import DoctorProfile from './pages/Doctor/DoctorProfile';
-
-
+import ManageMedicine  from './pages/Admin/ManageMedicine.jsx';
+import AddMedicine from './pages/Admin/AddMedicine.jsx';
+import BuyMedPage from './pages/Admin/BuyMedPage.jsx';
+import Statistics from './pages/Admin/Statistics.jsx';
+import UserList from './pages/Admin/UserList.jsx';
+import Schedule from './pages/Admin/Schedule.jsx';
 
 
 const App = () => {
@@ -43,7 +47,17 @@ const App = () => {
             {/* doctor routes */}
           <Route path='/doctor-dashboard' element={<DoctorDashboard/>} />
           <Route path='/doctor-appointments' element={<DoctorAppointment/>} />
-          <Route path= 'doctor-profile' element={<DoctorProfile/>}/>
+          <Route path='/doctor-profile' element={<DoctorProfile/>} />
+          <Route path='/manage-medicine' element={<ManageMedicine/>} />
+          <Route path='/add-medicine' element={<AddMedicine/>} />
+          <Route path = '/medicine/:medId' element = { <BuyMedPage/> } />
+          <Route path = '/manage-medicine/:typeOf' element = { <ManageMedicine/> } />
+          <Route path='/statistics' element={< Statistics />} />
+          <Route path='/user-list' element={<UserList />} />
+          <Route path='/schedule' element={<Schedule />} />
+          
+          {/* doctor routes */}
+
 
         </Routes>
       </div>

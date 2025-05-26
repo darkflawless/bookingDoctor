@@ -13,6 +13,8 @@ const userSchema = new mongoose.Schema({
     dob : {type: String , default: null},
 
     phone : {type: String , default : "000000"},
+    googleId: String, // Lưu ID từ Google
+    emailVerified: { type: Boolean, default: false }
 
 }) 
 

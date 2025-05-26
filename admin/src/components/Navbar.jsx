@@ -29,7 +29,12 @@ const Navbar = () => {
             {aToken ? 'Admin' : 'Doctor'}
           </p>
         </div>
-  
+
+        {/* Phần giữa: Tiêu đề trang - đã di chuyển lệch về phải */}
+        <div className="flex items-center ml-auto mr-8">
+          <img src={assets.trongdong_icon} alt="logo" className="h-10 w-auto" />
+        </div>
+
         {/* Phần bên phải: Nút Logout */}
         <button
           onClick={logout}

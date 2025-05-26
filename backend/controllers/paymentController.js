@@ -1,6 +1,7 @@
 import axios from "axios";
 import dotenv from "dotenv";
 import appointmentModel from "../models/appointmentModel.js";
+import redisClient from '../cache/redisClient.js';
 
 dotenv.config();
 
@@ -32,8 +33,8 @@ const getPayPalAccessToken = async () => {
 // ✅ Xác nhận thanh toán PayPal
 const confirmPayment = async (req, res) => {
   try {
-    const { transactionId, appointmentId, amount , currency , CLIENT_ID } = req.body;
-
+    const { transactionId, appointmentId, amount, currency, CLIENT_ID } = req.body;
+    const userId = req.userId;
     if (CLIENT_ID !== process.env.PAYPAL_CLIENT_ID) {
       return res.status(401).json({ message: "Invalid Client ID" });
     }
@@ -78,7 +79,10 @@ const confirmPayment = async (req, res) => {
     // 🔹 Cập nhật trạng thái thanh toán
     appointment.payment = true;
     await appointment.save();
-
+    const cacheKeys = await redisClient.keys(`appointments:user:${userId}:page:*:size:*`);
+    for (const key of cacheKeys) {
+      await redisClient.del(key);
+    }
     res.status(200).json({ message: "Thanh toán thành công", appointment });
   } catch (error) {
     console.error("Lỗi xác nhận thanh toán:", error.response?.data || error.message);

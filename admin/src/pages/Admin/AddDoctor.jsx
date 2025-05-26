@@ -37,19 +37,15 @@ const AddDoctor = () => {
             formData.append('fees', Number(fees))
             formData.append('speciality', speciality)
             formData.append('degree', degree)
-            formData.append('address', JSON.stringify({line1:address1, line2:address2}))
+            formData.append('address', JSON.stringify({ line1: address1, line2: address2 }))
             formData.append('about', about)
 
             //log form data
-            formData.forEach((value, key)=>{
-                console.log(`${key} : ${value}`);
-                
-            })
 
-            const { data } = await axios.post(backendURL + '/api/admin/add-doctor', formData, { headers : {aToken}  });
+            const { data } = await axios.post(backendURL + '/api/admin/add-doctor', formData, { headers: { aToken } });
 
-            if (data.success === true){
-                toast.success(data.message )
+            if (data.success === true) {
+                toast.success(data.message)
                 setName('')
                 setEmail('')
                 setPassword('')
@@ -62,12 +58,12 @@ const AddDoctor = () => {
                 setAbout('')
                 setDocImg(false)
             } else {
-                toast.error(data.message )
+                toast.error(data.message)
             }
 
         } catch (error) {
             toast.error(error)
-            
+
         }
 
     }
@@ -86,29 +82,29 @@ const AddDoctor = () => {
                 <div className="flex flex-col">
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Doctor's Name</label>
-                        <input onChange={(e) => setName(e.target.value)} value={name} type="text" placeholder='Name' required className="mt-1 p-2 border border-gray-300 rounded-md" />
+                        <input onChange={(e) => setName(e.target.value)} value={name} type="text" placeholder='Name' required className="mt-1 p-2 border border-gray-300 rounded-md w-full" />
                     </div>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Doctor's Email</label>
-                        <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" placeholder='Email' required className="mt-1 p-2 border border-gray-300 rounded-md" />
+                        <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" placeholder='Email' required className="mt-1 p-2 border border-gray-300 rounded-md w-full" />
                     </div>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Password</label>
-                        <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" placeholder='Password' required className="mt-1 p-2 border border-gray-300 rounded-md" />
+                        <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" placeholder='Password' required className="mt-1 p-2 border border-gray-300 rounded-md w-full" />
                     </div>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Experience : Year</label>
-                        <input onChange={(e) => setExperience(e.target.value)} value={experience} type="number" placeholder='Exp' required className="mt-1 p-2 border border-gray-300 rounded-md" />
+                        <input onChange={(e) => setExperience(e.target.value)} value={experience} type="number" placeholder='Exp' required className="mt-1 p-2 border border-gray-300 rounded-md w-full" />
                     </div>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Fees</label>
-                        <input onChange={(e) => setFees(e.target.value)} value={fees} type="number" placeholder='Fees' required className="mt-1 p-2 border border-gray-300 rounded-md" />
+                        <input onChange={(e) => setFees(e.target.value)} value={fees} type="number" placeholder='Fees' required className="mt-1 p-2 border border-gray-300 rounded-md w-full" />
                     </div>
                 </div>
                 <div className="flex flex-col">
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Speciality</label>
-                        <select onChange={(e) => setSpeciality(e.target.value)} value={speciality} className="mt-1 p-2 border border-gray-300 rounded-md">
+                        <select onChange={(e) => setSpeciality(e.target.value)} value={speciality} className="mt-1 p-2 border border-gray-300 rounded-md w-full">
                             <option value="General physician">General physician</option>
                             <option value="Gynecologist">Gynecologist</option>
                             <option value="Dermatologist">Dermatologist</option>
@@ -119,7 +115,7 @@ const AddDoctor = () => {
                     </div>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Education</label>
-                        <input onChange={(e) => setDegree(e.target.value)} value={degree} type="text" placeholder='Education' required className="mt-1 p-2 border border-gray-300 rounded-md" />
+                        <input onChange={(e) => setDegree(e.target.value)} value={degree} type="text" placeholder='Education' required className="mt-1 p-2 border border-gray-300 rounded-md w-full" />
                     </div>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Address</label>
@@ -129,7 +125,7 @@ const AddDoctor = () => {
                             type="text"
                             placeholder='Address1'
                             required
-                            className="mt-1 p-2 border border-gray-300 rounded-md w-full" // Thêm w-full
+                            className="mt-1 p-2 border border-gray-300 rounded-md w-full mb-2"
                         />
                         <input
                             onChange={(e) => setAddress2(e.target.value)}
@@ -137,7 +133,7 @@ const AddDoctor = () => {
                             type="text"
                             placeholder='Address2'
                             required
-                            className="mt-1 p-2 border border-gray-300 rounded-md w-full" // Thêm w-full
+                            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
                         />
                     </div>
                     <div className="mb-4">

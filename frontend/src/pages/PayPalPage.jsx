@@ -57,12 +57,10 @@ export const PayPalPage = () => {
   };
 
   return (
-    <div className= " container">
-      <h2 >Thanh toán bằng PayPal</h2>
-      <p>Số tiền cần thanh toán: {amount} USD</p>
-      <div id="paypal-button-container"></div>
+    <div className="container mx-auto p-6 max-w-md bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Thanh toán bằng PayPal</h2>
+      <p className="mb-6 text-gray-600">Số tiền cần thanh toán: <span className="font-bold">{amount} USD</span></p>
+      <div id="paypal-button-container" className="flex justify-center"></div>
     </div>
   );
 };
-
-

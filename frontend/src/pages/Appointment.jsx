@@ -37,12 +37,12 @@ export const Appointment = () => {
         // Thiết lập thời gian bắt đầu
         if (i === 0) {
           // Nếu là ngày hiện tại, bắt đầu từ thời gian hiện tại + 30 phút
-          currentDate.setHours(currentDate.getHours()+1)
+          currentDate.setHours(currentDate.getHours() >= 8 ? currentDate.getHours() : 8);
           currentDate.setMinutes(currentDate.getMinutes() >= 30 ? 30 : 0);
 
         } else {
           // Nếu không phải ngày hiện tại, bắt đầu từ 10:00
-          currentDate.setHours(10, 0, 0, 0);
+          currentDate.setHours(8, 0, 0, 0);
         }
     
         let timeSlot = [];
@@ -61,8 +61,6 @@ export const Appointment = () => {
             const slotTime = formattedTime
 
             const isSlotAvailable = docInfo?.slots_booked?.[slotDate]?.includes(formattedTime) ? false : true;
-
-        
 
             if (isSlotAvailable) {
               timeSlot.push({
@@ -86,8 +84,6 @@ export const Appointment = () => {
       }
       try {
         const date = docSlots[slotIndex][0].datetime
-        
-
         let day = date.getDate()
         let month = date.getMonth() + 1
         let year = date.getFullYear()

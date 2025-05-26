@@ -26,7 +26,7 @@ const doctorList = async (req, res) => {
     try {
 
         const pageNum = parseInt(req.query.pageNum) || 1; // lấy từ query
-        const perPage = 5;
+        const perPage = 8;
 
         const skip = (pageNum - 1) * perPage;  
               
@@ -125,12 +125,18 @@ const appointmentDoctor = async (req, res) => {
 const completeAppointment = async (req, res) => {
     try {
 
-        const { docId, appointmentId } = req.body
+        const { appointmentId } = req.body
 
         const appointmentData = await appointmentModel.findById(appointmentId)
 
+        const docId = appointmentData.docId
+
         if (appointmentData && docId === appointmentData.docId) {
             await appointmentModel.findByIdAndUpdate(appointmentId, { isCompleted: true })
+            await appointmentModel.findByIdAndUpdate(appointmentId, { payment: true  })
+            await doctorModel.findByIdAndUpdate(docId, { $inc: { earning: appointmentData.amount } })
+            await doctorModel.findByIdAndUpdate(docId , { $inc : {apptCount : 1 }})    
+
             return res.json({ success: true, message: "Appointment completed" })
         } else {
             return res.json({ success: false, message: "Mark invalid" })

@@ -1,0 +1,3 @@
+
+
+FROM WINDOWS/ServerCore:ltsc2022

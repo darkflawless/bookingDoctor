@@ -42,15 +42,17 @@ export const Login = () => {
         } catch (error) {
             toast.error(error.message)
         }
-
-    };
-
+    }
     useEffect(() => {
         if (token) {
             navigate('/')
         }
 
     }, [token] )
+
+    const handleGoogleLogin = () => {
+        window.location.href = backendURL + '/api/user/auth/google';
+    };
 
     return (
         <div className="flex items-center justify-center min-h-[80vh] bg-gray-100 mb-10">
@@ -117,6 +119,17 @@ export const Login = () => {
                     {state === 'Sign Up' ? 'Register' : 'Login'}
                 </button>
 
+                {/* Google Login Button */}
+                <div className="mt-4 flex justify-center">
+                    <button
+                        type="button"
+                        onClick={handleGoogleLogin}
+                        className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors duration-300"
+                    >
+                        Login with Google
+                    </button>
+                </div>
+
                 {/* Chuyển đổi giữa đăng nhập và đăng ký */}
                 <p className="mt-4 text-center">
                     {state === 'Sign Up' ? (
@@ -141,8 +154,12 @@ export const Login = () => {
                                 Register
                             </button>
                         </span>
+
+
                     )}
                 </p>
+                
+           
             </form>
         </div>
     );

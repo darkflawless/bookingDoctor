@@ -16,6 +16,7 @@ const appointmentSchema = new mongoose.Schema({
     payment : { type : Boolean , default : false },
     isCompleted : { type : Boolean , default : false },
     dateBooked: { type: Date, required: true },
+    star : { type : Number , default : 0 },
 })
 
 appointmentSchema.index({ userId: 1, dateBooked: -1 });

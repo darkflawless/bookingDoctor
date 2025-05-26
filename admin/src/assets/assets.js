@@ -11,6 +11,10 @@ import tick_icon from './tick_icon.svg'
 import appointments_icon from './appointments_icon.svg'
 import earning_icon from './earning_icon.svg'
 import patients_icon from './patients_icon.svg'
+import star_icon from './star_icon.png'
+import medicine_icon from './medicine_icon.webp'
+import calendar_icon from './calendar_icon.png'
+import trongdong_icon from './trongdong_icon.jpg'
 
 export const assets = {
     add_icon,
@@ -25,5 +29,9 @@ export const assets = {
     list_icon,
     tick_icon,
     appointments_icon,
-    earning_icon
+    earning_icon ,
+    star_icon ,
+    medicine_icon ,
+    calendar_icon ,
+    trongdong_icon
 }

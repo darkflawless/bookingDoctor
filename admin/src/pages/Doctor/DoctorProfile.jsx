@@ -22,6 +22,7 @@ const DoctorProfile = () => {
 
   const handleUpdateProfile = async () => {
     try {
+
       const updateDocData = {
 
         address: doctorProfile.address,
@@ -29,6 +30,7 @@ const DoctorProfile = () => {
         available: doctorProfile.available,
 
       }
+
       const { data } = await axios.post(backendURL + '/api/doctor/update-profile', updateDocData, { headers: { dToken } })
       if (data.success) {
         setDoctorProfile(data.doctor)
