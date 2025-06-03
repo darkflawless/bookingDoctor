@@ -9,7 +9,6 @@ import appointmentModel from '../models/appointmentModel.js';
 import userModel from '../models/userModel.js';
 
 
-
 const getSchedule = async (req, res) => {
   try {
     const today = new Date();

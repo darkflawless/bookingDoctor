@@ -9,6 +9,7 @@ import adminRouter from './routes/adminRoute.js'
 import doctorRouter from './routes/doctorRoute.js'
 import userRouter from './routes/userRoute.js'
 import payRouter from './routes/payRoute.js'
+import './jobs/order-checker.js'; // chạy code setup cron
 
 
 
