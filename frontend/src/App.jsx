@@ -26,7 +26,7 @@ export const App = () => {
       <ToastContainer />
       <Navbar />
       <Routes>
-        <Route path='/' element={<Home />} />
+        <Route path='/' element={ <Home />} />
         <Route path='/doctors' element={<Doctors />} />
         <Route path='/doctors/:speciality' element={<Doctors />} />
         <Route path='/about' element={<About />} />

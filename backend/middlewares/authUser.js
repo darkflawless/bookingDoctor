@@ -7,7 +7,7 @@ const authUser = async (req, res, next)=>{
 
         const {token} = req.headers
         if (!token){
-            return res.json({success : false , message  :"dont have token"})
+            return res.json({success : false , message  :"don't have token"})
         }
         const token_decoded = jwt.verify(token, process.env.JWT_SECRET)
         

@@ -62,11 +62,6 @@ const AppContextProvider = (props) => {
         }
     }
 
-
-    useEffect(() => {
-        loadUserProfileData(); // Call to load user data
-    }, []);
-
     const value = {
         doctors, getDoctorsData,
         currencySymbol,

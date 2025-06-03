@@ -11,42 +11,53 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
 // Configure Google OAuth strategy
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/api/user/auth/google/callback"
-},
-    async (accessToken, refreshToken, profile, done) => {
-        try {
-            const email = profile.emails[0].value;
-            let user = await userModel.findOne({ email });
+passport.use(
+    new GoogleStrategy(
+        {
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: "/api/user/auth/google/callback",
+        },
+        async (accessToken, refreshToken, profile, done) => {
+            try {
+                const email = profile.emails[0].value;
+                let user = await userModel.findOne({ email });
 
-            if (!user) {
-                user = new userModel({
-                    name: profile.displayName,
-                    email,
-                    password: null, // No password for Google OAuth users
-                    googleId: profile.id
-                });
-                await user.save();
+                if (!user) {
+                    user = new userModel({
+                        name: profile.displayName,
+                        email,
+                        googleId: profile.id,
+                        emailVerified: true, // Mark email as verified for Google users
+                        // Do not set password
+                    });
+                    await user.save();
+                }
+
+                done(null, user);
+            } catch (error) {
+                done(error, null);
             }
-
-            done(null, user);
-        } catch (error) {
-            done(error, null);
         }
-    }
-));
+    )
+);
 
-// Google OAuth login handler
 const googleLoginHandler = (req, res) => {
-    // User is attached to req.user by passport after successful authentication
     if (!req.user) {
-        return res.status(401).json({ success: false, message: "Authentication failed" });
+        return res.redirect(`${process.env.FRONTEND_URL}/login?error=Authentication+failed`);
     }
-    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET);
-    res.json({ success: true, token });
+
+    try {
+        const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
+            expiresIn: "1h",
+        });
+        // Redirect to frontend with token as query parameter
+        res.redirect(`${process.env.FRONTEND_URL}/login?token=${token}`);
+    } catch (error) {
+        res.redirect(`${process.env.FRONTEND_URL}/login?error=Server+error`);
+    }
 };
+
 
 //api to register user
 const registerUser = async (req, res) => {
@@ -300,13 +311,13 @@ const getApptByYearMonth = async (req, res) => {
         const userId = req.userId;
         const year = req.query.year;
         const month = req.query.month;
-        const perPage = 5 ;
+        const perPage = 5;
         const skip = 0
 
         const [appointments] = await Promise.all([
             appointmentModel
                 .find({ userId, dateBooked: { $gte: new Date(year, month - 1, 1), $lt: new Date(year, month, 0) } })
-                .sort({ dateBooked: -1 })            
+                .sort({ dateBooked: -1 })
         ]);
 
         const result = {
@@ -411,5 +422,5 @@ const cancelAppointment = async (req, res) => {
 
 export {
     registerUser, loginUser, getProfile, updateProfile, updateApptStar,
-    bookAppointment, listAppointment, cancelAppointment, googleLoginHandler , getApptByYearMonth
+    bookAppointment, listAppointment, cancelAppointment, googleLoginHandler, getApptByYearMonth
 }

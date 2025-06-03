@@ -24,10 +24,10 @@ userRouter.post('/cancel-appointment', authUser , cancelAppointment)
 userRouter.post('/rate-doctor', authUser , updateApptStar ) 
 
 // Google OAuth routes
+
 userRouter.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
-
 userRouter.get('/get-medicines', authUser , getMedicines)
 
 userRouter.get('/auth/google/callback',
