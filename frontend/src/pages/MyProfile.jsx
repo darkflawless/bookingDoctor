@@ -96,10 +96,10 @@ export const MyProfile = () => {
                                     onChange={(e) => setUserData(prev => ({ ...prev, address: { ...prev.address, line2: e.target.value } }))}
                                     type="text" />
                             </p>
-                            : <p className='text-blue-500'>
-                                {userData.address1}
+                            :<p className='text-blue-500'>
+                                {userData.address.line1}
                                 <br />
-                                {userData.address2}
+                                {userData.address.line2}
                             </p>
 
                     }

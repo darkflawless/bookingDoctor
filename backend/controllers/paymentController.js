@@ -7,7 +7,7 @@ dotenv.config();
 
 const PAYPAL_API = "https://api-m.sandbox.paypal.com"; // API sandbox PayPal
 
-// ✅ Lấy Access Token từ PayPal
+// Lấy Access Token từ PayPal
 const getPayPalAccessToken = async () => {
   try {
     const auth = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString("base64");
