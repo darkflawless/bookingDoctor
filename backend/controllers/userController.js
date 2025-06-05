@@ -29,15 +29,16 @@ passport.use(
                         email,
                         googleId: profile.id,
                         emailVerified: true, // Mark email as verified for Google users
-                        // Do not set password
+                        // and do not set password
                     });
                     await user.save();
                 }
-
                 done(null, user);
+
             } catch (error) {
                 done(error, null);
             }
+
         }
     )
 );
@@ -189,8 +190,9 @@ const bookAppointment = async (req, res) => {
         console.log({ docId, slotDate, slotTime });
 
         function formatToISO(dateStr, timeStr) {
+
             const [day, month, year] = dateStr.split("_");
-            // Đảm bảo "AM/PM" được parse đúng bằng cách thêm vào Date string chuẩn
+
             return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")} ${timeStr}`;
         }
 
@@ -200,10 +202,9 @@ const bookAppointment = async (req, res) => {
             return res.json({ success: false, message: "Doctor is not available" })
         }
 
-        let slots_booked = docData.slots_booked
-
+        let slots_booked = docData.slots_booked ;
+        slots_booked[slotDate] = slots_booked[slotDate] || [] ;
         // check if available
-
         if (slots_booked[slotDate]) {
             if (slots_booked[slotDate].includes(slotTime)) {
                 return res.json({ success: false, message: "Slot is already booked" })
@@ -268,15 +269,15 @@ const listAppointment = async (req, res) => {
 
         const skip = (pageNum - 1) * perPage;
 
-        // 🔑 Create cache key
+        //  Create cache key
         const cacheKey = `appointments:user:${userId}:page:${pageNum}:size:${perPage}`;
-        // 🔍 Check Redis
+        //  Check Redis
         const cachedData = await redisClient.get(cacheKey);
         if (cachedData) {
             return res.json(JSON.parse(cachedData));
         }
 
-        // 📦 query with mongoDB 
+        //  query with mongoDB 
         const [appointments, totalAppointments] = await Promise.all([
             appointmentModel
                 .find({ userId })
@@ -295,8 +296,8 @@ const listAppointment = async (req, res) => {
             currentPage: pageNum,
         };
 
-        // 💾 Save in Redis in 10s (optional)
-        await redisClient.setEx(cacheKey, 5, JSON.stringify(result));
+        // Save in Redis in 10s (optional)
+        await redisClient.setEx(cacheKey, 60 , JSON.stringify(result));
 
         res.json(result);
     } catch (error) {
@@ -338,7 +339,8 @@ const updateApptStar = async (req, res) => {
         const userId = req.userId;
 
         for (const [appointmentId, star] of Object.entries(rating)) {
-            // Kiểm tra giá trị star
+            // Kiểm tra giá trị star)
+
             if (typeof star !== 'number' || star < 0 || star > 5) {
                 return res.json({ success: false, message: "Invalid star rating" });
             }
@@ -347,6 +349,11 @@ const updateApptStar = async (req, res) => {
             const apptData = await appointmentModel.findById(appointmentId);
             if (!apptData) {
                 return res.json({ success: false, message: "Appointment not found" });
+            }
+
+            if (Date.now() < new Date(apptData.dateBooked).getTime() || !apptData.isCompleted ) {
+                // Kiểm tra nếu appointment là trong tương lai hoặc chưa hoàn thành
+                return res.json({ success: false, message: "Cannot rate future appointments" });
             }
 
             if (apptData.star !== 0) {

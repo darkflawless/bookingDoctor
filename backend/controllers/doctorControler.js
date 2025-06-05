@@ -53,7 +53,6 @@ const doctorList = async (req, res) => {
     }
 }
 
-
 // api for doctor login
 
 const loginDoctor = async (req, res) => {
@@ -186,9 +185,10 @@ const doctorDashboard = async (req, res) => {
     })
 
     let patients = []
+
     appointments.map((item) => {
-        if (!patients.includes(item.userId._id)) {
-            patients.push(item.userId._id)
+        if (!patients.includes(item.userId)) {
+            patients.push(item.userId)
         }
     })
 

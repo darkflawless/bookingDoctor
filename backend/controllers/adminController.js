@@ -105,7 +105,7 @@ const appointmentsAdmin = async (req, res) => {
 
     try {
         const pageNum = parseInt(req.query.pageNum) || 1; // lấy từ query;
-        const perPage = 8;
+        const perPage = 8 ;
 
 
         if (pageNum < 1) {
@@ -114,7 +114,8 @@ const appointmentsAdmin = async (req, res) => {
         const skip = (pageNum - 1) * perPage;
 
         const appointments = await appointmentModel
-            .find({})
+        
+            .find({}) //  , [ "$set" : { "$price" : { $multiply : [ price, 0.8 ] } } ]
             .sort({ dateBooked: -1 })
             .skip(skip)
             .limit(perPage)

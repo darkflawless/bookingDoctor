@@ -4,7 +4,7 @@ import cron from 'node-cron';
 import appointmentModel from '../models/appointmentModel.js';
 
 // Lịch chạy: mỗi ngày lúc 0h
-cron.schedule('0 15 * * *', async () => {
+cron.schedule('0 0 * * *', async () => {
   console.log('Đang kiểm tra đơn hàng quá hạn...');
 
   await appointmentModel.updateMany(

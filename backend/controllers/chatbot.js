@@ -20,9 +20,9 @@ const autoRep = async (req, res) => {
       chatHistory = [];
     }
     
-    console.log("message:", message);
+    //console.log("message:", message);
 
-    // Cập nhật lịch sử trò chuyện (chỉ giữ 3 tin nhắn gần nhất)
+    // Cập nhật lịch sử trò chuyện 
     chatHistory.push({ role: "user", content: message });
     if (chatHistory.length > 6) {
       chatHistory = chatHistory.slice(-6); // Chỉ giữ lại 3 cặp user-bot
